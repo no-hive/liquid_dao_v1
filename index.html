@@ -3,272 +3,393 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A decentralized autonomous organization framework for the future.">
-  <title>DAO Whitepaper</title>
+  <meta name="description" content="Liquid DAO — a shared core for organizations that can evolve. Voting Power, organizational hierarchies, and the freedom to fork.">
+  <meta name="color-scheme" content="light dark">
+  <title>Liquid DAO — Whitepaper</title>
   <script>
-    // Apply saved theme before first paint (no flash)
-    try { if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}
+    try {
+      var savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+    } catch (e) {}
   </script>
-  <style>
-:root {
+  <style>:root {
+  color-scheme: light;
   --bg: #ffffff;
   --fg: #000000;
-  --placeholder: #f0f0f0;
-  --menu-bg: #ffffff;
+  --muted: #555555;
   --menu-border: #d8d8d8;
   --backdrop: rgba(0, 0, 0, 0.3);
+  --soft: #f4f4f4;
 }
-
 html.dark {
+  color-scheme: dark;
   --bg: #000000;
   --fg: #c0c0c0;
-  --placeholder: #1a1a1a;
-  --menu-bg: #000000;
-  --menu-border: #2e2e2e;
+  --muted: #aaaaaa;
+  --menu-border: #333333;
   --backdrop: rgba(0, 0, 0, 0.6);
+  --soft: #141414;
 }
-
 *, *::before, *::after { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  font-family: 'Courier New', Courier, monospace;
-  background: var(--bg);
-  color: var(--fg);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
+body { margin: 0; font-family: 'Courier New', Courier, monospace; background: var(--bg); color: var(--fg); transition: background-color .3s ease, color .3s ease; }
+body.menu-open { overflow: hidden; }
 button { font-family: inherit; color: inherit; }
-:focus-visible { outline: 1px dashed currentColor; outline-offset: 4px; }
-
-/* 27.5% | 45% | 27.5% */
-.page {
-  width: 45%;
-  margin-left: 27.5%;
-  margin-right: 27.5%;
-  padding: 4rem 0;
-}
-
-.stack-12 > * + * { margin-top: 3rem; }
-.stack-4 > * + * { margin-top: 1rem; }
-
-section, header { scroll-margin-top: 4rem; }
-
-h1 { font-size: 3rem; line-height: 1.1; margin: 0; font-weight: 700; }
-h2 { font-size: 1.875rem; line-height: 1.25; margin: 0; font-weight: 700; }
-.subtitle { font-size: 1.25rem; margin: 1rem 0 0; }
-p { font-size: 1.125rem; line-height: 1.75; margin: 0; }
-
-.aspect-video {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--placeholder);
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
-}
-
-footer { font-size: 0.875rem; padding-top: 1rem; }
-
-/* Fixed controls */
-.fixed-btn {
-  position: fixed;
-  top: 25px;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  line-height: 1;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
+a { color: inherit; text-underline-offset: .2em; overflow-wrap: anywhere; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px dashed currentColor; outline-offset: 5px; }
+h1:focus, h2:focus, h3:focus, h4:focus, main:focus { outline: none; }
+.page { width: 45%; max-width: 54rem; margin: 0 auto; padding: 4rem 0; }
+article { overflow-wrap: break-word; }
+h1, h2, h3, h4 { scroll-margin-top: 4rem; font-weight: 700; }
+h1 { font-size: 3rem; line-height: 1.1; margin: 0 0 1rem; }
+h2 { font-size: 1.875rem; line-height: 1.3; margin: 5rem 0 2rem; padding-top: 1rem; border-top: 1px solid var(--menu-border); }
+h3 { font-size: 1.5rem; line-height: 1.4; margin: 3rem 0 1.5rem; }
+h4 { font-size: 1.2rem; line-height: 1.5; margin: 2.5rem 0 1rem; }
+p, li { font-size: 1.125rem; line-height: 1.75; }
+p { margin: 0 0 1.25rem; }
+article > h1 + p { font-size: 1.25rem; }
+article > h1 + p + p { font-size: .9rem; color: var(--muted); margin-bottom: 3rem; }
+ul, ol { padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
+li { padding-left: .25rem; margin: .65rem 0; }
+blockquote { border-left: 2px solid var(--menu-border); margin: 1.5rem 0; padding-left: 1.25rem; }
+hr { border: 0; border-top: 1px solid var(--menu-border); margin: 2rem 0; }
+code { font-family: inherit; background: var(--soft); padding: .1em .25em; }
+.diagram { margin: 1.5rem 0; padding: .35rem; background: #fff; border: 1px solid var(--menu-border); }
+.diagram a { display: block; }
+.diagram img { display: block; width: 100%; height: auto; max-width: 100%; }
+.table-scroll { overflow-x: auto; margin: 1.5rem 0 2rem; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; line-height: 1.5; }
+th, td { text-align: left; padding: .8rem .65rem; border: 1px solid var(--menu-border); vertical-align: top; }
+th { background: var(--soft); }
+footer { font-size: .875rem; line-height: 1.8; margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--menu-border); color: var(--muted); }
+.fixed-btn { position: fixed; top: 18px; background: var(--bg); border: 0; border-radius: 0; min-width: 44px; min-height: 44px; padding: 4px; cursor: pointer; line-height: 1; opacity: .75; transition: opacity .3s ease, background-color .3s ease; }
 .fixed-btn:hover { opacity: 1; }
-.theme-toggle { right: 25px; font-size: 1.25rem; z-index: 50; }
-.menu-toggle { left: 25px; font-size: 1.75rem; z-index: 70; }
-
-/* Slide-out menu */
-.menu-backdrop {
-  position: fixed;
-  inset: 0;
-  background: var(--backdrop);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 55;
-}
+.theme-toggle { right: 18px; font-size: 1.25rem; z-index: 50; }
+.menu-toggle { left: 18px; font-size: 1.75rem; z-index: 70; }
+.menu-backdrop { position: fixed; inset: 0; background: var(--backdrop); opacity: 0; pointer-events: none; transition: opacity .3s ease; z-index: 55; }
 .menu-backdrop.open { opacity: 1; pointer-events: auto; }
-
-.menu-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 280px;
-  max-width: 85vw;
-  padding: 5rem 25px 2rem;
-  background: var(--menu-bg);
-  border-right: 1px solid var(--menu-border);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  z-index: 60;
-  overflow-y: auto;
-}
-.menu-panel.open { transform: translateX(0); }
-.menu-panel a {
-  display: block;
-  padding: 0.5rem 0;
-  font-size: 1.125rem;
-  color: inherit;
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-.menu-panel a:hover { opacity: 1; }
-
-@media (max-width: 1024px) {
-  .page { width: 84%; margin-left: 8%; margin-right: 8%; }
-}
+.menu-panel { position: fixed; top: 0; left: 0; bottom: 0; width: 340px; max-width: 85vw; padding: 5rem 25px 2rem; background: var(--bg); border-right: 1px solid var(--menu-border); transform: translateX(-100%); visibility: hidden; transition: transform .3s ease, visibility .3s, background-color .3s ease; z-index: 60; overflow-y: auto; }
+.menu-panel.open { transform: translateX(0); visibility: visible; }
+.menu-label { font-size: .75rem; letter-spacing: .1em; color: var(--muted); margin-bottom: 1.5rem; }
+.menu-panel a { display: block; padding: .5rem 0; font-size: .95rem; line-height: 1.5; text-decoration: none; opacity: .8; }
+.menu-panel a:hover { opacity: 1; text-decoration: underline; }
+.menu-panel .toc-level-1 { font-size: 1.15rem; font-weight: bold; }
+.menu-panel .toc-level-2 { font-size: .9rem; font-weight: bold; margin-top: 1.5rem; opacity: 1; }
+.menu-panel .toc-level-4 { padding-left: 1rem; font-size: .85rem; color: var(--muted); }
+.skip-link { position: fixed; left: 1rem; top: -10rem; z-index: 100; padding: .75rem; background: var(--bg); color: var(--fg); }
+.skip-link:focus { top: 1rem; }
+@media (max-width: 1024px) { .page { width: 84%; } }
 @media (max-width: 640px) {
-  .page { width: 88%; margin-left: 6%; margin-right: 6%; padding: 4rem 0 3rem; }
+  .page { width: 88%; padding: 5rem 0 3rem; }
   h1 { font-size: 2.25rem; }
-  h2 { font-size: 1.5rem; }
-  p { font-size: 1rem; }
+  h2 { font-size: 1.5rem; margin-top: 3.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.1rem; }
+  p, li { font-size: 1rem; }
+  article > h1 + p { font-size: 1.05rem; }
+  table { min-width: 32rem; font-size: .85rem; }
+  .fixed-btn { top: 12px; }
+  .menu-toggle { left: 12px; }
+  .theme-toggle { right: 12px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }
+@media print {
+  .fixed-btn, .menu-panel, .menu-backdrop, .skip-link { display: none !important; }
+  .page { width: 100%; max-width: none; padding: 0; }
+  html.dark { --bg: #fff; --fg: #000; --muted: #555; --menu-border: #ccc; --soft: #eee; }
+  h2, h3, h4 { break-after: avoid; }
+  .diagram, tr { break-inside: avoid; }
+  .table-scroll { overflow: visible; }
 }
-
-  </style>
+</style>
 </head>
 <body>
-  <button type="button" id="menu-toggle" class="fixed-btn menu-toggle" aria-label="Open menu" aria-expanded="false">≡</button>
-  <button type="button" id="theme-toggle" class="fixed-btn theme-toggle" aria-label="Switch to dark mode">●</button>
-
+  <a class="skip-link" href="#whitepaper">Skip to the whitepaper</a>
+  <button type="button" id="menu-toggle" class="fixed-btn menu-toggle" aria-label="Open contents" aria-controls="menu-panel" aria-expanded="false">≡</button>
+  <button type="button" id="theme-toggle" class="fixed-btn theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">●</button>
   <div id="menu-backdrop" class="menu-backdrop" aria-hidden="true"></div>
-  <nav id="menu-panel" class="menu-panel" aria-label="Sections" aria-hidden="true">
-    <a href="#overview" data-target="overview" tabindex="-1">Overview</a>
-    <a href="#introduction" data-target="introduction" tabindex="-1">Introduction</a>
-    <a href="#architecture" data-target="architecture" tabindex="-1">Architecture</a>
-    <a href="#governance" data-target="governance" tabindex="-1">Governance</a>
-    <a href="#tokenomics" data-target="tokenomics" tabindex="-1">Tokenomics</a>
-    <a href="#security" data-target="security" tabindex="-1">Security</a>
-    <a href="#roadmap" data-target="roadmap" tabindex="-1">Roadmap</a>
-    <a href="#community" data-target="community" tabindex="-1">Community</a>
-    <a href="#conclusion" data-target="conclusion" tabindex="-1">Conclusion</a>
+  <nav id="menu-panel" class="menu-panel" aria-label="Whitepaper contents" aria-hidden="true" inert>
+    <p class="menu-label">CONTENTS</p>
+    <a class="toc-level-1" href="#overview" tabindex="-1">Liquid DAO</a>
+<a class="toc-level-2" href="#part-i-the-idea" tabindex="-1">Part I. The Idea</a>
+<a class="toc-level-3" href="#section-1" tabindex="-1">1. “Any dystopia is a utopia you cannot leave.”</a>
+<a class="toc-level-3" href="#section-2" tabindex="-1">2. “We need more DAOs — but different and better DAOs.”</a>
+<a class="toc-level-3" href="#section-3" tabindex="-1">3. Hierarchy, Autonomy, and Diversity</a>
+<a class="toc-level-3" href="#section-4" tabindex="-1">4. What Makes Governance Liquid</a>
+<a class="toc-level-2" href="#part-ii-the-proposed-core" tabindex="-1">Part II. The Proposed Core</a>
+<a class="toc-level-3" href="#section-5" tabindex="-1">5. A Singleton for Organizational Hierarchies</a>
+<a class="toc-level-3" href="#section-6" tabindex="-1">6. Scores as Voting Power</a>
+<a class="toc-level-3" href="#section-7" tabindex="-1">7. The Ability to Leave: Forking a DAO</a>
+<a class="toc-level-3" href="#section-8" tabindex="-1">8. What Makes the Core Liquid</a>
+<a class="toc-level-2" href="#part-iii-example-an-ecosystem-in-motion" tabindex="-1">Part III. Example: An Ecosystem in Motion</a>
+<a class="toc-level-3" href="#section-9" tabindex="-1">9. The Ecosystem Example</a>
+<a class="toc-level-4" href="#section-9-liquidity-based-daos-for-a-dex" tabindex="-1">Liquidity-Based DAOs for a DEX</a>
+<a class="toc-level-4" href="#section-9-the-launchpad-dao" tabindex="-1">The Launchpad DAO</a>
+<a class="toc-level-4" href="#section-9-the-network-dao" tabindex="-1">The Network DAO</a>
+<a class="toc-level-4" href="#section-9-mutual-recognition" tabindex="-1">Mutual Recognition</a>
+<a class="toc-level-4" href="#section-9-recognition-of-non-dao-protocols" tabindex="-1">Recognition of Non-DAO Protocols</a>
+<a class="toc-level-4" href="#section-9-public-goods-daos" tabindex="-1">Public Goods DAOs</a>
+<a class="toc-level-4" href="#section-9-cross-chain-recognition" tabindex="-1">Cross-Chain Recognition</a>
+<a class="toc-level-4" href="#section-9-integration-costs" tabindex="-1">Integration Costs</a>
+<a class="toc-level-3" href="#section-10" tabindex="-1">10. A Launchpad Splits</a>
+<a class="toc-level-4" href="#section-10-a-disagreement-about-direction" tabindex="-1">A Disagreement About Direction</a>
+<a class="toc-level-4" href="#section-10-a-new-configuration-at-separation" tabindex="-1">A New Configuration at Separation</a>
+<a class="toc-level-4" href="#section-10-from-minority-to-majority" tabindex="-1">From Minority to Majority</a>
+<a class="toc-level-4" href="#section-10-different-decisions-become-possible" tabindex="-1">Different Decisions Become Possible</a>
+<a class="toc-level-3" href="#section-11" tabindex="-1">11. Two Branches in One Ecosystem</a>
+<a class="toc-level-3" href="#section-12" tabindex="-1">12. A Utopia You Can Leave</a>
+<a class="toc-level-3" href="#section-13" tabindex="-1">13. Why This Is V1</a>
   </nav>
+  <main class="page" id="whitepaper" tabindex="-1">
+    <article><h1 id="overview" tabindex="-1">Liquid DAO</h1>
+<p><em>A shared core for organizations that can evolve</em></p>
+<h2 id="part-i-the-idea" tabindex="-1">Part I. The Idea</h2>
+<h3 id="section-1" tabindex="-1">1. “Any dystopia is a utopia you cannot leave.”</h3>
+<p>Leaving something behind is part of life and the price of progress, both personal and global. However, leaving becomes difficult when what we have built cannot leave with us. Money may be transferable, while reputation and influence remain tied to the entity we leave.</p>
+<p>The more we contribute, the more costly departure can become. This is the point at which centralization takes hold and becomes dangerous.</p>
+<p>These tensions exist in companies, labor organizations, groups of friends, cities, and states.</p>
+<p>And, most importantly for this paper, similar tensions exist in DAOs.</p>
+<p>But why does this matter?</p>
+<p>It is not only about a general dislike of centralization or the dangers it brings. The ability to separate is also a condition for evolution. Species, entities, and societies split to follow different paths of development. These branches later meet and often reunite, and progress emerges from this diversity. For one to become many, you, I, and anyone else must be able to leave.</p>
+<p>Returning to DAOs: without room to evolve, they risk becoming increasingly centralized and remaining artifacts of their past. A participant can leave, but the recognition of their experience, reputation, and contribution may remain tied to the organization. The Voting Power they acquired there does not necessarily follow them elsewhere.</p>
+<p>Here, Voting Power means the broader ability to shape collective decisions: both formal voting weight and the standing that makes others take a participant&#39;s judgment seriously. A person retains their experience when they leave, but a new organization may not recognize what that experience meant in the old one.</p>
+<p>Tradable tokens offer one way to move between DAOs: sell in one place and buy in another. This makes it easier to move capital and acquire formal voting weight. Yet selling a balance does not transfer the holder&#39;s reputation, and buying a large balance does not by itself make a newcomer a trusted voice. The history behind a proposal can matter alongside the votes available to pass it.</p>
+<p>The closer governance comes to recognizing actual contribution and reputation, the more important mechanisms for evolution become. Otherwise, the very things that make someone&#39;s participation meaningful also make departure costly.</p>
+<p>This is why we need DAOs that people can leave together without losing the recognition and Voting Power they have built.</p>
+<h3 id="section-2" tabindex="-1">2. “We need more DAOs — but different and better DAOs.”</h3>
+<p>What, then, should a person be able to preserve when leaving a DAO? The accumulated standing through which their contribution has become Voting Power.</p>
+<p>There can be no single rule for how that standing is earned. Someone may write an application and give it to a DAO. Another person may provide liquidity or do work that sustains the organization. Even if they earn money from that activity, its value to the DAO can exceed what their share of ownership suggests.</p>
+<p>These contributions differ, but they raise the same question: how much weight should a participant have in collective decisions? Each DAO answers according to its own purpose. The resulting Voting Power has a common role even when its sources are entirely different.</p>
+<p>How, then, can we apply “Code is law” when every DAO has different laws?</p>
+<p>The shared law belongs at the level of how organizations exist, relate, and change. It must allow different sources of Voting Power to coexist, rather than prescribe one source for everyone. Each DAO can determine what it values within a framework that allows what has been recognized to remain meaningful beyond its original boundaries.</p>
+<p>Nature offers an analogy. The succession of seasons brings different inhabitants and events, while underlying physical processes make this variety possible. Those processes establish the conditions within which different forms of life develop; they do not prescribe a single form for the whole ecosystem.</p>
+<p>The same principle can guide governance. Shared rules can establish how organizations recognize Voting Power, relate to one another, and continue in new forms, while remaining independent of how a participant originally earned that power. The question is how to preserve continuity as the rules and purposes around it change.</p>
+<h3 id="section-3" tabindex="-1">3. Hierarchy, Autonomy, and Diversity</h3>
+<p>Organizations can have different internal rules and still face tasks they need to undertake together. Recognizing one another&#39;s participants allows them to acknowledge contribution across their boundaries. Governing a shared undertaking also requires a level at which they can make collective decisions.</p>
+<p>Nesting provides that level. An organization can belong to a larger organization while retaining its own purpose, rules, and participants. The larger whole governs their shared undertaking, while its constituent organizations retain autonomy over their own affairs. This allows local differences to coexist with cooperation at a broader scale.</p>
+<p>This is hierarchy in the sense of relationships between levels. Authority can remain distributed across those levels, with decisions about shared matters made together and local decisions left to the organizations concerned. Diversity across scales requires room for this nesting.</p>
+<p>These relationships also give Voting Power a context in which to receive recognition beyond its original organization. A larger DAO can recognize participation in the DAOs within it, and separate organizations can recognize one another without forming a hierarchy. The resulting structure can include hierarchies, alliances, and overlapping affiliations.</p>
+<p>The ability to separate and the ability to form larger wholes are complementary. Separation allows different paths to emerge; nesting allows them to cooperate across scales. Together, they create the structure within which diversity can evolve.</p>
+<h3 id="section-4" tabindex="-1">4. What Makes Governance Liquid</h3>
+<p>Liquid DAO brings together two things that must be able to evolve: Voting Power and the relationships between organizations.</p>
+<p>Voting Power gives a common expression to participation whose sources can differ from one organization to another. Relationships allow another organization to recognize that Voting Power under its own rules. Forking allows a new branch to inherit an existing distribution as its starting point. These paths preserve continuity while allowing different rules and purposes.</p>
+<p>The model is liquid because both can change. People can gain or lose Voting Power as their participation changes. Organizations can connect, nest, separate, and form new shared structures while preserving continuity with what their participants have already built.</p>
+<p>The aim is an ecosystem in which different forms of authority and organization can develop together, and in which taking a new path does not require starting from nothing.</p>
+<h2 id="part-ii-the-proposed-core" tabindex="-1">Part II. The Proposed Core</h2>
+<h3 id="section-5" tabindex="-1">5. A Singleton for Organizational Hierarchies</h3>
+<p>The proposed core gives the hierarchy described above a shared representation: each DAO has a distinct record, connections identify which DAOs recognize one another, and recognition rules determine how Voting Power in one DAO contributes to Voting Power in another. All of these records follow one standard.</p>
+<p>The Singleton design brings this state into one core contract. It holds the DAOs, their connections, and their Voting Power records, so recognition rules can operate on the same shared state. Each DAO remains a distinct organization with its own rules. This shared structure is the architectural foundation of the proposal.</p>
+<p><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/poolmanager">Uniswap v4</a> provides the architectural reference: its PoolManager holds the state of multiple separately identified pools in one singleton contract. Liquid DAO applies the same architectural pattern to organizations and their connections.</p>
+<p>Related calculations run within the shared core. Reusing logic can reduce repeated deployments and external calls; any gas savings require measurement.</p>
+<p>A common interface makes this state accessible. Applications can read Voting Power and relationships, while a wallet-to-DAO index would let them query a wallet&#39;s participation across the deployment. <a href="https://eips.ethereum.org/EIPS/eip-20">ERC-20</a> provides the interface reference: shared operations allow applications to work with different tokens. Liquid DAO seeks the same compatibility for organizations with different governance rules.</p>
+<p>The Singleton brings the state together; the common interface lets other systems work with it. Separate deployments can follow the same standard.</p>
+<h3 id="section-6" tabindex="-1">6. Scores as Voting Power</h3>
+<p>In the technical model, <strong>Score is the numerical representation of a participant&#39;s Voting Power in a particular DAO: Score = Voting Power.</strong> In a one-token-one-vote DAO, a participant&#39;s token balance determines their Voting Power; in Liquid DAO, their Score plays that role.</p>
+<p>When a DAO&#39;s rules reflect how its participants actually recognize usefulness and trust, its Scores express that judgment. Inheriting or recognizing those Scores carries the judgment forward.</p>
+<p>A contribution is an action or activity the DAO recognizes. Its rules determine how that activity changes a participant&#39;s Score. Reputation describes the recognition of a participant&#39;s work; it is not a separate numerical layer between Score and Voting Power in this model.</p>
+<p>Each DAO chooses its sources of Voting Power: other DAOs, other smart contracts it chooses to connect, or a combination of both. A source does not need a DAO of its own. The receiving DAO configures formulas that determine how information from each source contributes to participant Scores.</p>
+<p>These sources may represent protocol use, liquidity provision, completed work, governance participation, or verified roles. Modules can report qualifying activity to the core, which applies the DAO&#39;s rules to update the Score. Updates may occur at selected thresholds or in batches.</p>
+<p>Each DAO defines how its Scores grow or decline. One may grant Voting Power quickly and reduce it after inactivity. Another may require sustained contribution. <a href="https://docs.colony.io/learn/governance/reputation/">Colony</a> provides an existing reference for contribution-based reputation and decay.</p>
+<p>A DAO can also use a participant&#39;s Score in another DAO as an input. The source Score already represents that participant&#39;s Voting Power in the source DAO. The receiving DAO applies its recognition formula to determine how much this adds to the participant&#39;s Score—and therefore Voting Power—in the receiving DAO. It chooses the source, the formula, and the conditions for changing or removing the connection.</p>
+<p>For example, a participant with a Score of 4 in a pool DAO has 4 units of Voting Power there. If the DEX DAO recognizes that Score at a weight of 0.5, it contributes 2 to the participant&#39;s DEX Score. If a network DAO then recognizes the DEX Score at a weight of 0.5, those 2 units contribute 1 to the participant&#39;s network Score. Assuming no other sources, the participant has Voting Power of 4, 2, and 1 in the three DAOs respectively. Each step uses the source DAO&#39;s Score, including the recognized contributions already reflected in it.</p>
+<p>These connections form a directed graph of Score calculations. A participant&#39;s live Score is their current Voting Power in that DAO. Voting systems can use a snapshot of Scores to fix Voting Power for a particular decision; they do not introduce another conversion from Score to Voting Power. The implementation must specify the state and calculation rules used to reproduce that snapshot.</p>
+<h3 id="section-7" tabindex="-1">7. The Ability to Leave: Forking a DAO</h3>
+<p>We can now return to the starting question: what does it mean to be able to leave? In this system, it means being able to branch from an existing DAO with the Voting Power its participants have already accumulated.</p>
+<p>The proposed core should support a single fork command that creates a mirror DAO from a governance snapshot. The snapshot preserves participants&#39; Scores, the rules that produced them, and the relevant state of their sources. The new DAO inherits that distribution of Voting Power as its starting point.</p>
+<p>The group creating the fork selects the new branch&#39;s sources of Voting Power and configures its formulas as part of the fork operation itself. It can connect different DAOs or smart contracts and assign different weights to their inputs. The branch is created with this configuration already in place, so choosing it does not require first winning a vote under the inherited distribution.</p>
+<p>An inherited minority can therefore become a majority over time as participation under the new branch&#39;s rules changes the distribution of Scores. The inherited balance provides continuity without permanently fixing which group holds power.</p>
+<p>Like a cell dividing, one DAO can become two independently developing organizations. The original continues to operate, while the new branch develops from the inherited state under its own configuration. The fork itself creates no automatic synchronization between branches. Explicit recognition links, if configured, can still affect a branch&#39;s Scores.</p>
+<p>Creating the fork should not require permission from the original DAO&#39;s leadership or a successful vote in that DAO. Participants can choose which branch to support and remain active in both. Their past participation provides a starting point for a different future.</p>
+<h3 id="section-8" tabindex="-1">8. What Makes the Core Liquid</h3>
+<p>Technically, Liquid DAO requires a shared core with the following functions:</p>
+<ul>
+<li><strong>Shared state:</strong> maintain distinct DAOs and their participant Scores in one Singleton.</li>
+<li><strong>Score updates:</strong> use selected DAOs and other smart contracts as sources, applying each DAO&#39;s formulas to calculate Voting Power.</li>
+<li><strong>Relationships:</strong> record connections between DAOs and apply recognition formulas across nested and overlapping structures.</li>
+<li><strong>Common access:</strong> expose Scores, relationships, and participation through a standard interface for applications and voting tools.</li>
+<li><strong>Snapshots and forks:</strong> fix Voting Power for a decision or create a DAO that inherits the starting distribution, with new sources and formulas configured at the moment of separation.</li>
+</ul>
+<p>Together, these functions let Voting Power and organizational relationships evolve within the same system. Each DAO can retain its own treasury and execution tools.</p>
+<h2 id="part-iii-example-an-ecosystem-in-motion" tabindex="-1">Part III. Example: An Ecosystem in Motion</h2>
+<h3 id="section-9" tabindex="-1">9. The Ecosystem Example</h3>
+<p>The following example shows how Liquid DAO could connect organizations across an EVM ecosystem. It illustrates possible relationships rather than prescribing a single architecture.</p>
+<p><em>Diagram legend: “Chain” denotes the Network DAO. Arrows point from a source of Voting Power to the DAO that recognizes it.</em></p>
+<h4 id="section-9-liquidity-based-daos-for-a-dex" tabindex="-1">Liquidity-Based DAOs for a DEX</h4>
+<p>Consider a DEX with four liquidity pools, each governed by a local DAO. Liquidity providers receive Voting Power over pool-level matters such as liquidity caps, insurance, and fees. Uniswap v4 hooks provide a possible integration point for such local governance.</p>
+<p>The DEX DAO recognizes Voting Power from all four pool DAOs. Providing liquidity can therefore give a participant a voice in both local pool decisions and exchange-wide matters, including upgrades and grant programs.</p>
+<figure class="diagram"><a href="assets/diagrams/01-pools-and-dex.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: Liquidity pool DAOs connected to the DEX DAO; connections 1–4"><img src="assets/diagrams/01-pools-and-dex.png" alt="Liquidity pool DAOs connected to the DEX DAO; connections 1–4" width="1413" height="583" loading="lazy" decoding="async"></a></figure>
 
-  <main class="page stack-12">
-    <header id="overview">
-      <h1>DAO Whitepaper</h1>
-      <p class="subtitle">A decentralized autonomous organization framework for the future.</p>
-    </header>
+<p><strong>Connections 1–4</strong> represent the DEX DAO&#39;s recognition of pool Scores. The DEX DAO controls both the formulas and which pools it recognizes. It can give additional weight to low-liquidity pools or exclude a malicious pool through its governance.</p>
+<h4 id="section-9-the-launchpad-dao" tabindex="-1">The Launchpad DAO</h4>
+<p>A launchpad DAO governs protocol upgrades, fees, and other shared decisions. It recognizes liquidity provision in pools containing tokens launched through its platform.</p>
+<figure class="diagram"><a href="assets/diagrams/02-launchpad.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: The launchpad recognizes selected pool DAOs; connections 5–6"><img src="assets/diagrams/02-launchpad.png" alt="The launchpad recognizes selected pool DAOs; connections 5–6" width="1413" height="615" loading="lazy" decoding="async"></a></figure>
 
-    <section id="introduction" class="stack-4">
-      <h2>Introduction</h2>
-      <p>Traditional organizations concentrate authority in a small group of executives and trustees. Decisions travel up a hierarchy, records live in private ledgers, and members must trust that rules are applied as written.</p>
-      <p>A decentralized autonomous organization replaces that trust with code. Rules are encoded in smart contracts on a public blockchain, where every member can read them, and every action is recorded in a shared, tamper-resistant history.</p>
-      <p>This paper describes a framework for building such an organization: how it is structured, how it decides, how value flows through it, and how it stays safe while it grows.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 1">Image Placeholder 1</div>
-    <section id="architecture" class="stack-4">
-      <h2>Architecture</h2>
-      <p>The system is built from three layers with clear boundaries. The governance layer collects proposals and votes. The execution layer carries out approved decisions. The treasury layer holds the organization’s assets.</p>
-      <p>Each layer talks to the next through narrow, audited interfaces. Governance can instruct execution, but only execution can request funds, and the treasury releases funds only against a verified, approved proposal.</p>
-      <p>This separation limits the damage of any single failure. A flaw in a voting contract cannot drain the treasury directly, and a compromised executor cannot invent approvals.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 2">Image Placeholder 2</div>
-    <section id="governance" class="stack-4">
-      <h2>Governance</h2>
-      <p>Voting uses a quadratic rule: the cost of each additional vote on one proposal grows with the square of the votes cast. Large holders still count for more, but their advantage shrinks, and members with smaller stakes can express strong preferences.</p>
-      <p>Proposals come in three types. Parameter changes adjust settings such as quorum or voting periods. Spending proposals release treasury funds. Constitutional proposals amend the core rules and require a higher threshold and a longer delay.</p>
-      <p>Safeguards include a time lock between approval and execution, a veto window for a security council on emergencies only, and minimum deposits that discourage spam.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 3">Image Placeholder 3</div>
-    <section id="tokenomics" class="stack-4">
-      <h2>Tokenomics</h2>
-      <p>The total supply is fixed at 1,000,000,000 tokens. Forty percent goes to the community, including rewards and grants. Twenty-five percent goes to the treasury, twenty percent to contributors, and fifteen percent to early supporters.</p>
-      <p>Contributor and early supporter allocations vest over four years, with a one-year cliff. Nothing unlocks during the first twelve months, and the remainder releases monthly, which aligns long-term incentives with the health of the organization.</p>
-      <p>Members may stake tokens to gain voting power and a share of protocol fees. Staked tokens are locked for a chosen period, and longer locks carry proportionally more weight.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 4">Image Placeholder 4</div>
-    <section id="security" class="stack-4">
-      <h2>Security</h2>
-      <p>Every contract is reviewed by at least two independent auditing firms before deployment, and the reports are published in full. Any change to audited code triggers a new review.</p>
-      <p>Treasury assets sit behind multi-signature wallets that require approval from several independent key holders, spread across different jurisdictions and hardware devices.</p>
-      <p>A standing bug bounty pays researchers in proportion to the severity of what they report. We would rather pay for a disclosure than learn of a flaw from an attacker.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 5">Image Placeholder 5</div>
-    <section id="roadmap" class="stack-4">
-      <h2>Roadmap</h2>
-      <p>Phase one, Foundation, delivers the core contracts, the audits, and a test network where early members can practice proposing and voting.</p>
-      <p>Phase two, Launch, opens the mainnet, distributes the initial tokens, and activates the treasury with a first round of community grants.</p>
-      <p>Phase three, Expansion, hands remaining administrative powers to token holders, adds cross-chain support, and funds independent teams building on the framework.</p>
-    </section>
-    <div class="aspect-video" role="img" aria-label="Image Placeholder 6">Image Placeholder 6</div>
-    <section id="community" class="stack-4">
-      <h2>Community</h2>
-      <p>Work is organized into open working groups covering development, research, operations, and outreach. Anyone can join a group, propose a project, and request funding for it.</p>
-      <p>Transparency is the default. Treasury balances, votes, and meeting notes are public, and each working group publishes regular reports on what it shipped and what it spent.</p>
-      <p>Participation is rewarded. Contributors earn grants and reputation for their work, and newcomers are supported with documentation, mentors, and small starter tasks.</p>
-    </section>
-    <section id="conclusion" class="stack-4">
-      <h2>Conclusion</h2>
-      <p>DAOs will not replace every institution, but they offer a credible way to coordinate people who share a goal and do not share an employer. Open rules and shared ownership make collective decisions easier to inspect and harder to capture.</p>
-      <p>This framework is a starting point, and it will improve through use. We invite developers, researchers, and curious readers to read the code, challenge the design, and join the organization.</p>
-    </section>
+<p>Tokens C and P were launched through this platform, so <strong>connections 5 and 6</strong> recognize participation in their pools. These additional governance roles can influence where participants provide liquidity, making DAO partnerships a competitive advantage.</p>
+<h4 id="section-9-the-network-dao" tabindex="-1">The Network DAO</h4>
+<p>The Network DAO governs shared network-level matters. It recognizes Voting Power from the DEX and launchpad through <strong>connections 7 and 8</strong>. Because both organizations recognize pool participation, a liquidity provider can gain a voice at the pool, protocol, and network levels.</p>
+<figure class="diagram"><a href="assets/diagrams/03-network-dao.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: The network DAO recognizes the DEX and launchpad; connections 7–8"><img src="assets/diagrams/03-network-dao.png" alt="The network DAO recognizes the DEX and launchpad; connections 7–8" width="1413" height="704" loading="lazy" decoding="async"></a></figure>
 
-    <footer>Published 2024. Licensed under Creative Commons.</footer>
+<h4 id="section-9-mutual-recognition" tabindex="-1">Mutual Recognition</h4>
+<p>Recognition can also run in the opposite direction. Through <strong>connection 9</strong>, a pool DAO can recognize the DEX DAO&#39;s Scores, giving wider DEX participants a role in its local governance. The pool could separately offer fee discounts to frequent DEX users as an incentive to participate.</p>
+<p>Reciprocal connections require a rule that bounds recursive calculations. One option considered here is a maximum recognition depth of three levels.</p>
+<h4 id="section-9-recognition-of-non-dao-protocols" tabindex="-1">Recognition of Non-DAO Protocols</h4>
+<p>DAOs can also recognize activity recorded by contracts without their own governance, such as staking or borrowing protocols.</p>
+<figure class="diagram"><a href="assets/diagrams/04-non-dao-sources.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: Additional connections to non-DAO protocol sources; connections 9–11"><img src="assets/diagrams/04-non-dao-sources.png" alt="Additional connections to non-DAO protocol sources; connections 9–11" width="1413" height="697" loading="lazy" decoding="async"></a></figure>
+
+<p>Through <strong>connection 11</strong>, the Network DAO recognizes this activity. <strong>Connection 10</strong> shows that a local pool DAO can use such sources too. Each receiving DAO chooses its sources and formulas. Integration requires a way for the core to read or receive the relevant activity records.</p>
+<h4 id="section-9-public-goods-daos" tabindex="-1">Public Goods DAOs</h4>
+<p>A public goods funding protocol can use recognized DeFi participation as an eligibility condition. For example, a quadratic crowdfunding protocol could require participants to have contributed to the network&#39;s DeFi ecosystem. <strong>Connection 12</strong> illustrates this choice; the protocol can change the condition through its own rules.</p>
+<figure class="diagram"><a href="assets/diagrams/05-public-goods.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: Public goods funding protocols and DeFi eligibility; connection 12"><img src="assets/diagrams/05-public-goods.png" alt="Public goods funding protocols and DeFi eligibility; connection 12" width="1413" height="806" loading="lazy" decoding="async"></a></figure>
+
+<p>The Public Goods Engine allocates additional donations using participation recognized from public goods organizations through <strong>connections 13–15</strong>.</p>
+<p>The Network DAO recognizes the Public Goods Engine through <strong>connection 16</strong>, giving public goods participants a voice alongside participants in financial protocols.</p>
+<figure class="diagram"><a href="assets/diagrams/06-public-goods-engine.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: Public goods participation recognized by the network DAO"><img src="assets/diagrams/06-public-goods-engine.png" alt="Public goods participation recognized by the network DAO" width="1413" height="806" loading="lazy" decoding="async"></a></figure>
+
+<h4 id="section-9-cross-chain-recognition" tabindex="-1">Cross-Chain Recognition</h4>
+<figure class="diagram"><a href="assets/diagrams/07-cross-chain.png" target="_blank" rel="noopener" aria-label="Open full-size diagram: Cross-chain recognition of Voting Power; connections 17–18"><img src="assets/diagrams/07-cross-chain.png" alt="Cross-chain recognition of Voting Power; connections 17–18" width="1413" height="806" loading="lazy" decoding="async"></a></figure>
+
+<p>Another L2 can recognize Scores from the Network DAO through a bridge (<strong>connection 17</strong>) and from a pool containing that L2&#39;s wrapped token (<strong>connection 18</strong>). These connections can give existing participants a role in a new ecosystem.</p>
+<h4 id="section-9-integration-costs" tabindex="-1">Integration Costs</h4>
+<p>These relationships add computation and integration costs. Their practical value depends on whether governance and coordination benefits justify those costs; this requires implementation and measurement.</p>
+<h3 id="section-10" tabindex="-1">10. A Launchpad Splits</h3>
+<h4 id="section-10-a-disagreement-about-direction" tabindex="-1">A Disagreement About Direction</h4>
+<p>Suppose the launchpad focuses on established projects. A minority wants to fund early experimental projects, including those without a liquid token or substantial pool. Its members review projects and support developers, but the existing formulas mainly reward activity associated with established projects. Their work does not earn enough Voting Power to change the launchpad&#39;s direction.</p>
+<h4 id="section-10-a-new-configuration-at-separation" tabindex="-1">A New Configuration at Separation</h4>
+<p>The group submits a fork command with a snapshot and the new branch&#39;s sources and formulas. The branch inherits participant Scores and the starting distribution of Voting Power, together with the records explaining that state.</p>
+<p>At creation, the new branch is configured to recognize contracts recording reviews and technical support for early projects. Its formulas determine how subsequent work changes Scores. Choosing this configuration requires neither approval from the original DAO nor a prior majority under the inherited distribution.</p>
+<p>The original DAO continues with its own configuration and Scores. The fork itself creates no automatic synchronization between branches. Explicit recognition links, if configured, can still affect a branch&#39;s Scores.</p>
+<h4 id="section-10-from-minority-to-majority" tabindex="-1">From Minority to Majority</h4>
+<p>At the snapshot point, participants supporting established projects hold 60 units of Voting Power, while the experimental-project group holds 40. Both DAOs begin with this distribution.</p>
+<p>Suppose the experimental-project group earns another 50 units through qualifying reviews and technical work in the new branch. Assuming no other Score changes:</p>
+<div class="table-scroll" role="region" aria-label="Voting Power comparison table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Point in the example</th>
+<th align="right">Established-project group</th>
+<th align="right">Experimental-project group</th>
+<th align="right">Experimental group&#39;s share</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Snapshot inherited by both DAOs</td>
+<td align="right">60</td>
+<td align="right">40</td>
+<td align="right">40%</td>
+</tr>
+<tr>
+<td>New branch after the additional work</td>
+<td align="right">60</td>
+<td align="right">90</td>
+<td align="right">60%</td>
+</tr>
+<tr>
+<td>Original DAO, assuming no other changes</td>
+<td align="right">60</td>
+<td align="right">40</td>
+<td align="right">40%</td>
+</tr>
+</tbody></table></div>
+<p>The new rules apply to anyone doing the qualifying work, including members of the original majority. They reward activity rather than permanently privileging the group that created the fork.</p>
+<h4 id="section-10-different-decisions-become-possible" tabindex="-1">Different Decisions Become Possible</h4>
+<p>The new majority approves funding for an experimental project that would not have passed the original launchpad&#39;s selection policy. The original DAO continues to support established projects.</p>
+<p>The fork establishes governance. Deploying the new launchpad&#39;s application, connecting execution tools, and funding its treasury are separate steps. Assume these resources are in place when the funding decision is executed.</p>
+<p>The two launchpads share a governance history but follow different paths. Participants can contribute to either or both, earning Scores under each organization&#39;s rules.</p>
+<h3 id="section-11" tabindex="-1">11. Two Branches in One Ecosystem</h3>
+<p>The rest of the ecosystem does not have to split. Each receiving DAO chooses whether to recognize the original launchpad, the new branch, or both, and at what weight. Inheriting a snapshot does not automatically grant the new branch the original&#39;s external recognition. The DEX and its pools can continue serving projects from either launchpad.</p>
+<h3 id="section-12" tabindex="-1">12. A Utopia You Can Leave</h3>
+<p>The paper began with a thought: any dystopia is a utopia you cannot leave.</p>
+<p>Liquid DAO aims to let accumulated contribution become the starting point for another organization. People can leave together, pursue different rules, and remain connected to a wider ecosystem. Their shared past can support new directions instead of binding them permanently to one structure.</p>
+<p>That possibility keeps organizations open to further evolution.</p>
+<h3 id="section-13" tabindex="-1">13. Why This Is V1</h3>
+<p>I still consider Liquid DAO a rough, evolving concept. This first version sets out the direction I want to explore, while many of its claims and technical details still need to be developed and made more precise.</p>
+<p>Over the next six months, I hope to publish a follow-up paper with clearer claims and a complete proposed code architecture, including the core contracts, data structures, and interfaces. The goal is to turn this concept into a concrete technical proposal that others can review, challenge, and build on.</p>
+<!--
+Original ecosystem example: https://github.com/no-hive/liquid_dao/blob/cb8cdca5a423cdb97d86dff4bef9804c29f06faa/whitepaper_light_theme.md
+The ecosystem example was adapted and shortened; diagram assets and connection numbers were preserved.
+
+MIT License
+
+Copyright (c) 2026 no-hive
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+</article>
+    <footer>Liquid DAO · 2026 · <a href="LICENSE">MIT License</a> · <a href="https://github.com/no-hive/liquid_dao">GitHub</a></footer>
   </main>
+  <script>(function () {
+  'use strict';
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme-toggle');
+  function renderTheme() {
+    var dark = root.classList.contains('dark');
+    themeBtn.textContent = dark ? '○' : '●';
+    themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeBtn.setAttribute('aria-pressed', String(dark));
+  }
+  themeBtn.addEventListener('click', function () {
+    var dark = root.classList.toggle('dark');
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    renderTheme();
+  });
+  renderTheme();
 
-  <script>
-    (function () {
-      var root = document.documentElement;
-
-      // Theme
-      var themeBtn = document.getElementById('theme-toggle');
-      function renderTheme() {
-        var dark = root.classList.contains('dark');
-        themeBtn.textContent = dark ? '○' : '●';
-        themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-      }
-      themeBtn.addEventListener('click', function () {
-        var dark = root.classList.toggle('dark');
-        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
-        renderTheme();
-      });
-      renderTheme();
-
-      // Menu
-      var menuBtn = document.getElementById('menu-toggle');
-      var panel = document.getElementById('menu-panel');
-      var backdrop = document.getElementById('menu-backdrop');
-      var links = panel.querySelectorAll('a');
-      function setMenu(open) {
-        panel.classList.toggle('open', open);
-        backdrop.classList.toggle('open', open);
-        panel.setAttribute('aria-hidden', String(!open));
-        menuBtn.setAttribute('aria-expanded', String(open));
-        menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-        menuBtn.textContent = open ? '×' : '≡';
-        links.forEach(function (a) { a.tabIndex = open ? 0 : -1; });
-      }
-      menuBtn.addEventListener('click', function () { setMenu(!panel.classList.contains('open')); });
-      backdrop.addEventListener('click', function () { setMenu(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-      links.forEach(function (a) {
-        a.addEventListener('click', function (e) {
-          e.preventDefault();
-          setMenu(false);
-          var el = document.getElementById(a.dataset.target);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        });
-      });
-    })();
-  </script>
+  var menuBtn = document.getElementById('menu-toggle');
+  var panel = document.getElementById('menu-panel');
+  var backdrop = document.getElementById('menu-backdrop');
+  var main = document.getElementById('whitepaper');
+  var links = Array.from(panel.querySelectorAll('a'));
+  function setMenu(open, restoreFocus) {
+    panel.inert = !open;
+    panel.classList.toggle('open', open);
+    backdrop.classList.toggle('open', open);
+    document.body.classList.toggle('menu-open', open);
+    panel.setAttribute('aria-hidden', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close contents' : 'Open contents');
+    menuBtn.textContent = open ? '×' : '≡';
+    main.inert = open;
+    themeBtn.inert = open;
+    links.forEach(function (a) { a.tabIndex = open ? 0 : -1; });
+    if (open) links[0].focus();
+    else if (restoreFocus !== false) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function () { setMenu(!panel.classList.contains('open')); });
+  backdrop.addEventListener('click', function () { setMenu(false); });
+  document.addEventListener('keydown', function (e) {
+    if (!panel.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); setMenu(false); }
+    if (e.key === 'Tab') {
+      var focusable = [menuBtn].concat(links);
+      var index = focusable.indexOf(document.activeElement);
+      if (e.shiftKey && index <= 0) { e.preventDefault(); focusable[focusable.length - 1].focus(); }
+      else if (!e.shiftKey && index === focusable.length - 1) { e.preventDefault(); menuBtn.focus(); }
+    }
+  });
+  links.forEach(function (a) {
+    a.addEventListener('click', function () {
+      setMenu(false, false);
+      var target = document.getElementById(a.hash.slice(1));
+      if (target) target.focus({preventScroll: true});
+    });
+  });
+})();
+</script>
 </body>
 </html>

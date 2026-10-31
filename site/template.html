@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Liquid DAO — a shared core for organizations that can evolve. Voting Power, organizational hierarchies, and the freedom to fork.">
+  <meta name="color-scheme" content="light dark">
+  <title>Liquid DAO — Whitepaper</title>
+  <script>
+    try {
+      var savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+  <style>@@CSS@@</style>
+</head>
+<body>
+  <a class="skip-link" href="#whitepaper">Skip to the whitepaper</a>
+  <button type="button" id="menu-toggle" class="fixed-btn menu-toggle" aria-label="Open contents" aria-controls="menu-panel" aria-expanded="false">≡</button>
+  <button type="button" id="theme-toggle" class="fixed-btn theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">●</button>
+  <div id="menu-backdrop" class="menu-backdrop" aria-hidden="true"></div>
+  <nav id="menu-panel" class="menu-panel" aria-label="Whitepaper contents" aria-hidden="true" inert>
+    <p class="menu-label">CONTENTS</p>
+    @@TOC@@
+  </nav>
+  <main class="page" id="whitepaper" tabindex="-1">
+    <article>@@CONTENT@@</article>
+    <footer>Liquid DAO · 2026 · <a href="LICENSE">MIT License</a> · <a href="https://github.com/no-hive/liquid_dao">GitHub</a></footer>
+  </main>
+  <script>@@JS@@</script>
+</body>
+</html>

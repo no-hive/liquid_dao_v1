@@ -1,7 +1,35 @@
-**This repo contains the V1 whitepaper for the Liquid DAO concept.**
+# Liquid DAO
 
-It's available as a [website](https://no-hive.github.io/liquid_dao) or as Markdown files in two versions: [whitepaper_light_theme.md](https://github.com/no-hive/liquid_dao/blob/main/whitepaper_light_theme.md) and [whitepaper_dark_theme.md](https://github.com/no-hive/liquid_dao/blob/main/whitepaper_dark_theme.md).
+A shared core for organizations that can evolve.
 
-*If you would like to contribute to this concept, you are welcome to fork the repository and make any changes you wish. We expect this whitepaper to be followed by V2 and later versions, as the concept is still at an early stage in some respects. This whitepaper is distributed under the MIT License, as will be any files added here in the future.*
+## Read the whitepaper
 
-<img width="1200" height="800" alt="Liquid DAO overview" src="https://github.com/user-attachments/assets/35721602-aa3c-4771-8177-6524c1fb823f" />
+**[Read Liquid DAO on the website →](https://no-hive.github.io/liquid_dao/)**
+
+The website contains the complete paper, the original ecosystem diagrams, and the launchpad fork example. Use the theme switch on the website to choose your reading appearance.
+
+## Update the website
+
+`whitepaper.md` is the single source for the paper. Edit it, then rebuild the ready-to-publish page with Node.js 20 or later:
+
+```sh
+node scripts/build_site.mjs
+```
+
+Commit the updated `whitepaper.md` and generated `index.html` together. The Markdown parser is included in `scripts/vendor/`; no package installation is needed. The website itself is static and does not need Node.js, JavaScript libraries, or a build service to display the paper.
+
+The presentation templates are in `site/`, and the seven original diagrams are stored locally in `assets/diagrams/`. Editorial instructions for future diagrams remain in the Markdown source and are omitted from the published page.
+
+## GitHub Pages
+
+The generated `index.html` is already included. For the existing GitHub Pages site, keep publishing from the repository root on the `main` branch. No deployment workflow or hosting migration is required.
+
+To upload the replacement, extract the archive and replace the old repository contents with the extracted files. Keep `index.html`, `README.md`, `whitepaper.md`, and the other folders at the repository root; do not upload the ZIP itself or put everything inside another enclosing folder. Preserve the repository's GitHub Pages settings.
+
+## Contributing
+
+The concept is open to discussion and further development. Fork the repository to propose improvements to the paper or implementation.
+
+## License
+
+[MIT](LICENSE). The bundled Marked parser has its own [MIT notice](scripts/vendor/marked.LICENSE.md).
