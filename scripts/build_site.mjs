@@ -53,7 +53,10 @@ content = content.replace(/<img\b[^>]*>/g, (tag) => {
 content = content.replace(/<table>/g, '<div class="table-scroll" role="region" aria-label="Voting Power comparison table" tabindex="0"><table>').replace(/<\/table>/g, '</table></div>');
 const toc = headings.map(({depth, label, id}) => `<a class="toc-level-${depth}" href="#${id}" tabindex="-1">${escape(label)}</a>`).join('\n');
 const [template, css, js] = await Promise.all([read('site/template.html'), read('site/styles.css'), read('site/app.js')]);
-const values = { CONTENT: content, TOC: toc, CSS: css, JS: js };
+const typography = await read('site/typography.css');
+const wavesCss = await read('site/waves.css');
+const wavesJs = await read('site/waves.js');
+const values = { CONTENT: content, TOC: toc, CSS: css + '\n' + typography + '\n' + wavesCss, JS: js + '\n' + wavesJs };
 const html = template.replace(/@@(CONTENT|TOC|CSS|JS)@@/g, (_, key) => values[key]);
 if (/@@[A-Z]+@@/.test(html)) throw new Error('Unresolved template placeholder');
 await writeFile(resolve(root, 'index.html'), html);

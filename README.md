@@ -4,7 +4,7 @@ A shared core for organizations that can evolve.
 
 ## Read the whitepaper
 
-**[Read Liquid DAO on the website →](https://no-hive.github.io/liquid_dao/)**
+**[Read Liquid DAO on the website →](https://no-hive.github.io/liquid_dao_v1/)**
 
 The website contains the complete paper, the original ecosystem diagrams, and the launchpad fork example. Use the theme switch on the website to choose your reading appearance.
 
@@ -29,6 +29,10 @@ To upload the replacement, extract the archive and replace the old repository co
 ## Contributing
 
 The concept is open to discussion and further development. Fork the repository to propose improvements to the paper or implementation.
+
+## Typography
+
+The paper uses locally bundled Source Serif 4 and Source Sans 3. Their license notices are included in `assets/fonts/`. Typography overrides are in `site/typography.css`.
 
 ## License
 

@@ -1,0 +1,61 @@
+@font-face { font-family: 'Liquid Serif'; src: url('assets/fonts/SourceSerif4-Regular.ttf.woff2') format('woff2'); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Liquid Serif'; src: url('assets/fonts/SourceSerif4-It.ttf.woff2') format('woff2'); font-style: italic; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Liquid Serif'; src: url('assets/fonts/SourceSerif4-Semibold.ttf.woff2') format('woff2'); font-style: normal; font-weight: 600 900; font-display: swap; }
+@font-face { font-family: 'Liquid Sans'; src: url('assets/fonts/SourceSans3-Regular.ttf.woff2') format('woff2'); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Liquid Sans'; src: url('assets/fonts/SourceSans3-Semibold.ttf.woff2') format('woff2'); font-style: normal; font-weight: 600 900; font-display: swap; }
+:root {
+  --bg: #faf9f6; --fg: #252521; --muted: #68685f; --menu-border: #d9d8cf; --backdrop: rgba(25,25,21,.25); --soft: #efeee8;
+  --serif: 'Liquid Serif', Georgia, 'Times New Roman', serif;
+  --sans: 'Liquid Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+html.dark { --bg: #181a19; --fg: #e6e4dd; --muted: #b2b3a9; --menu-border: #41443d; --backdrop: rgba(0,0,0,.55); --soft: #252825; }
+body { font-family: var(--serif); text-rendering: optimizeLegibility; }
+button { font-family: var(--sans); }
+a { text-decoration-thickness: .06em; text-underline-offset: .17em; }
+a:hover { text-decoration-thickness: .1em; }
+.page { width: min(960px, calc(100% - 48px)); max-width: none; margin: 0 auto; padding: 80px 0 64px; }
+article > * { width: min(100%, 680px); margin-left: auto; margin-right: auto; }
+h1, h2, h3, h4 { font-family: var(--sans); font-weight: 600; scroll-margin-top: 72px; }
+h1 { font-size: 56px; letter-spacing: -.035em; line-height: 1.05; margin-top: 0; margin-bottom: 16px; }
+h2 { font-size: 14px; line-height: 1.4; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); margin-top: 72px; margin-bottom: 24px; padding-top: 20px; }
+h3 { font-size: 30px; line-height: 1.22; letter-spacing: -.014em; margin-top: 60px; margin-bottom: 22px; }
+h2 + h3 { margin-top: 0; }
+h4 { font-size: 22px; line-height: 1.35; letter-spacing: -.005em; margin-top: 40px; margin-bottom: 16px; }
+p, li { font-size: 20px; line-height: 1.6; }
+p { margin-top: 0; margin-bottom: 16px; }
+article > h1 + p { font-size: 22px; line-height: 1.4; margin-bottom: 0; }
+strong { font-weight: 600; }
+ul, ol { padding-left: 1.3em; margin-top: 16px; margin-bottom: 24px; }
+li { padding-left: .15em; margin: 10px 0; }
+code { font-family: 'Courier New', monospace; font-size: .85em; }
+article > .diagram, article > .table-scroll { width: 100%; max-width: 960px; }
+.diagram { margin-top: 32px; margin-bottom: 32px; padding: 6px; }
+.table-scroll { margin-top: 24px; margin-bottom: 32px; }
+table { font-family: var(--sans); font-size: 16px; line-height: 1.45; }
+th, td { padding: 14px 16px; border: 0; border-bottom: 1px solid var(--menu-border); }
+th { font-weight: 600; }
+td:not(:first-child), th:not(:first-child) { font-variant-numeric: tabular-nums; text-align: right; }
+footer { width: min(100%,680px); margin: 64px auto 0; font-family: var(--sans); font-size: 14px; line-height: 1.7; padding-top: 24px; }
+.menu-panel { font-family: var(--sans); }
+.menu-label { font-family: var(--sans); font-size: 12px; }
+.menu-panel a { font-size: 16px; line-height: 1.4; }
+.menu-panel .toc-level-1 { font-size: 22px; font-weight: 600; }
+.menu-panel .toc-level-2 { font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+.menu-panel .toc-level-4 { font-size: 15px; }
+@media (max-width: 720px) {
+  .page { width: calc(100% - 40px); padding: 76px 0 48px; }
+  h1 { font-size: 44px; }
+  h2 { margin-top: 56px; font-size: 13px; }
+  h3 { font-size: 26px; margin-top: 48px; margin-bottom: 20px; }
+  h2 + h3 { margin-top: 0; }
+  h4 { font-size: 21px; margin-top: 32px; }
+  p, li { font-size: 19px; line-height: 1.6; }
+  article > h1 + p { font-size: 21px; }
+  table { min-width: 540px; font-size: 15px; }
+  th, td { padding: 12px; }
+  .diagram { padding: 3px; }
+}
+@media print {
+  .page { width: 100%; max-width: none; padding: 0; }
+  article > *, footer { width: 100%; }
+}

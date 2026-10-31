@@ -1,0 +1,31 @@
+.ascii-waves {
+  display: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  mask-image: linear-gradient(to bottom, transparent, #000 80px, #000 calc(100% - 48px), transparent);
+}
+.ascii-wave {
+  position: absolute;
+  top: 0;
+  width: 120px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  opacity: .38;
+  font: 400 9px/12px 'Courier New', Courier, monospace;
+  letter-spacing: 0;
+  white-space: pre;
+  text-align: left;
+  will-change: transform;
+}
+.ascii-wave-left { left: max(12px, calc((100vw - 960px) / 4 - 60px)); }
+.ascii-wave-right { right: max(12px, calc((100vw - 960px) / 4 - 60px)); }
+.page { position: relative; z-index: 1; }
+@media (min-width: 1280px) and (hover: hover) and (pointer: fine) { .ascii-waves { display: block; } }
+@media (max-width: 1279px), (hover: none), (pointer: coarse) { .ascii-waves { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .ascii-wave { transform: none !important; will-change: auto; } }
+@media print { .ascii-waves { display: none !important; } }
