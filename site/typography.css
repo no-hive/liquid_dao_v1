@@ -4,7 +4,7 @@
 @font-face { font-family: 'Liquid Sans'; src: url('assets/fonts/SourceSans3-Regular.ttf.woff2') format('woff2'); font-style: normal; font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Liquid Sans'; src: url('assets/fonts/SourceSans3-Semibold.ttf.woff2') format('woff2'); font-style: normal; font-weight: 600 900; font-display: swap; }
 :root {
-  --bg: #faf9f6; --fg: #252521; --muted: #68685f; --menu-border: #d9d8cf; --backdrop: rgba(25,25,21,.25); --soft: #efeee8;
+  --bg: #ffffff; --fg: #252521; --muted: #68685f; --menu-border: #d9d8cf; --backdrop: rgba(25,25,21,.25); --soft: #efeee8;
   --serif: 'Liquid Serif', Georgia, 'Times New Roman', serif;
   --sans: 'Liquid Sans', 'Helvetica Neue', Arial, sans-serif;
 }
